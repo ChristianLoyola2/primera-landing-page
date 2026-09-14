@@ -86,7 +86,9 @@ const gumPoints = Array.from({ length: 49 }, (_, i) => {
 }).join(' ');
 
 // Cada instancia necesita su propio degradado para no pisarse con otra.
-const sweepId = `sweep-${crypto.randomUUID().slice(0, 8)}`;
+const uid = crypto.randomUUID().slice(0, 8);
+const sweepId = `sweep-${uid}`;
+const frameId = `frame-${uid}`;
 ---
 
 <figure class="scan">
@@ -101,6 +103,10 @@ const sweepId = `sweep-${crypto.randomUUID().slice(0, 8)}`;
         <stop offset="0.5" stop-color="var(--panel-accent)" stop-opacity="0.5" />
         <stop offset="1" stop-color="var(--panel-accent)" stop-opacity="0" />
       </linearGradient>
+
+      <clipPath id={frameId}>
+        <rect x="0" y="0" width="560" height="252" />
+      </clipPath>
     </defs>
 
     <polyline
@@ -154,7 +160,9 @@ const sweepId = `sweep-${crypto.randomUUID().slice(0, 8)}`;
       ))
     }
 
-    <rect class="sweep" x="-150" y="0" width="150" height="252" fill={`url(#${sweepId})`} />
+    <g clip-path={`url(#${frameId})`}>
+      <rect class="sweep" x="-150" y="0" width="150" height="252" fill={`url(#${sweepId})`} />
+    </g>
   </svg>
 
   <figcaption>Arcada superior, numeración FDI. Así se ve en la pantalla de la consulta.</figcaption>
