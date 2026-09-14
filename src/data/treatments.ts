@@ -4,6 +4,8 @@ export interface Treatment {
   name: string;
   /** Duración del bloque que se reserva en la agenda. */
   duration: string;
+  /** Qué es esa hora cuando no es el tratamiento completo. */
+  qualifier?: string;
   description: string;
 }
 
@@ -24,14 +26,16 @@ export const treatments: readonly Treatment[] = [
   {
     id: 'ortodoncia',
     name: 'Ortodoncia invisible',
-    duration: '30 min · estudio',
+    duration: '30 min',
+    qualifier: 'estudio inicial',
     description:
       'Simulación digital del resultado antes de decidir. Alineadores transparentes, control cada seis semanas.',
   },
   {
     id: 'implantes',
     name: 'Implantes y coronas',
-    duration: '30 min · valoración',
+    duration: '30 min',
+    qualifier: 'valoración',
     description:
       'Planificación guiada por imagen y corona cerámica diseñada a partir del escaneo.',
   },

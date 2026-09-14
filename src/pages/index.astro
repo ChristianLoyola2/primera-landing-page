@@ -5,10 +5,10 @@ import Hero from '~/components/Hero.astro';
 import SiteFooter from '~/components/SiteFooter.astro';
 import SiteHeader from '~/components/SiteHeader.astro';
 import TreatmentList from '~/components/TreatmentList.astro';
-import VisitSteps from '~/components/VisitSteps.astro';
+import VisitTimeline from '~/components/VisitTimeline.astro';
 import { clinic } from '~/data/clinic';
 
-const title = `${clinic.name} · ${clinic.tagline}`;
+const title = `${clinic.name}, ${clinic.tagline.toLowerCase()} en ${clinic.address.district}`;
 const description = `Clínica dental en ${clinic.address.district}. Primera visita de ${clinic.firstVisit.duration} con escáner intraoral 3D, radiografía digital y plan de tratamiento el mismo día. Agenda tu hora online.`;
 ---
 
@@ -16,8 +16,8 @@ const description = `Clínica dental en ${clinic.address.district}. Primera visi
   <SiteHeader />
   <main>
     <Hero />
+    <VisitTimeline />
     <TreatmentList />
-    <VisitSteps />
     <BookingSection />
   </main>
   <SiteFooter />

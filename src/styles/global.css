@@ -2,14 +2,19 @@
  * Base y primitivas de layout compartidas.
  *
  * Aquí vive solo lo que usan varios componentes: reset, tipografía base,
- * el contenedor, las bandas de sección y los botones. Todo lo específico de
- * un componente va en su propio bloque <style> dentro del .astro.
+ * el contenedor, las secciones y los botones. Todo lo específico de un
+ * componente va en su propio bloque <style> dentro del .astro.
  */
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* La barra superior es fija: los anclajes internos tienen que frenar antes. */
+html {
+  scroll-padding-top: 86px;
 }
 
 [hidden] {
@@ -25,9 +30,9 @@ body {
   margin: 0;
   background: var(--ground);
   color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.65;
+  font-family: var(--font-text);
+  font-size: 17.5px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -36,7 +41,7 @@ a {
 }
 
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid var(--brass);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -45,81 +50,72 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.021em;
+  line-height: 1.12;
   text-wrap: balance;
 }
 
 /* ---------- primitivas de layout ---------- */
 
-.wrap {
+.shell {
   max-width: var(--measure);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-.band {
+/*
+ * Una sola clase controla el ritmo vertical entre secciones. No hay
+ * márgenes por elemento que puedan colapsar o duplicarse contra ella.
+ */
+.section {
+  padding-block: 76px;
   border-top: 1px solid var(--line);
 }
 
-.band-sunk {
-  background: var(--surface-sunk);
+/* La primera sección arranca contra el panel oscuro: no necesita filete. */
+main > :first-child + .section {
+  border-top: 0;
 }
 
-.band-inner {
-  padding-block: 64px;
+.section-head {
+  max-width: 30ch;
 }
 
-.band-head {
-  max-width: 46ch;
+.section-head h2 {
+  font-size: clamp(1.6rem, 3.3vw, 2.1rem);
 }
 
-.band-head h2 {
-  margin-top: 14px;
-  font-size: clamp(1.5rem, 3vw, 1.95rem);
-  line-height: 1.15;
-}
-
-.band-head p {
-  margin-block: 12px 0;
+.section-head p {
+  max-width: 54ch;
+  margin-block: 16px 0;
   color: var(--ink-soft);
-}
-
-/* ---------- tipografía de utilidad ---------- */
-
-.eyebrow {
-  margin: 0;
-  color: var(--brass);
-  font-family: var(--font-display);
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 16.5px;
 }
 
 /* ---------- controles ---------- */
 
 .btn {
   display: inline-block;
-  padding: 11px 22px;
-  border: 1px solid var(--brass);
-  background: var(--brass);
-  color: var(--on-brass);
-  font-family: var(--font-display);
-  font-size: 14.5px;
+  padding: 11px 20px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-ui);
+  font-size: 15px;
   font-weight: 500;
-  letter-spacing: 0.01em;
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color 0.18s ease,
-    border-color 0.18s ease;
+    background-color 0.16s ease,
+    border-color 0.16s ease;
 }
 
 .btn:hover {
-  background: var(--brass-strong);
-  border-color: var(--brass-strong);
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
 }
 
 .btn[disabled] {
@@ -127,18 +123,21 @@ h3 {
   cursor: progress;
 }
 
-.btn-quiet {
-  padding-bottom: 2px;
+.btn-line {
+  padding-bottom: 3px;
   border-bottom: 1px solid var(--line-strong);
   color: var(--ink);
-  font-family: var(--font-display);
-  font-size: 14.5px;
+  font-family: var(--font-ui);
+  font-size: 15px;
   text-decoration: none;
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease;
 }
 
-.btn-quiet:hover {
-  border-color: var(--brass);
-  color: var(--brass);
+.btn-line:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -146,19 +145,20 @@ h3 {
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }
 
 @media (max-width: 860px) {
-  .band-inner {
-    padding-block: 48px;
+  .section {
+    padding-block: 54px;
   }
 }
 
 @media (max-width: 560px) {
   body {
-    font-size: 16.5px;
+    font-size: 17px;
   }
 
   :root {

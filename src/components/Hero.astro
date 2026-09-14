@@ -1,88 +1,114 @@
 ---
-import ClinicFacts from '~/components/ClinicFacts.astro';
-import ToothScan from '~/components/ToothScan.astro';
+import ArchScan from '~/components/ArchScan.astro';
 import { clinic } from '~/data/clinic';
 ---
 
-<section class="wrap hero" id="inicio">
-  <div>
-    <p class="eyebrow">Odontología digital</p>
-    <h1>Tu hora, con el diagnóstico hecho el mismo día.</h1>
-    <p class="lead">
-      Escaneamos, revisamos y te explicamos el plan en una sola visita de {
-        clinic.firstVisit.durationLong
-      }. Sin pastas de impresión y sin presupuestos que llegan tres días después.
-    </p>
+<section class="panel" id="inicio">
+  <div class="shell panel-grid">
+    <div class="panel-say">
+      <h1>Ves tu propia boca en la pantalla y sales con el plan escrito.</h1>
+      <p class="lead">
+        Escáner intraoral 3D y radiografía panorámica digital en la primera visita, que
+        dura {clinic.firstVisit.durationLong}. Sin pasta de impresión y sin esperar tres
+        días por el presupuesto.
+      </p>
 
-    <div class="hero-actions">
-      <a class="btn" href="#agendar">Agendar hora</a>
-      <a class="btn-quiet" href="#tratamientos">Ver tratamientos</a>
+      <div class="panel-actions">
+        <a class="btn" href="#agendar">Pedir hora</a>
+        <a class="btn-line" href="#tratamientos">Ver tratamientos</a>
+      </div>
+
+      <p class="panel-note">Guardamos cupos de urgencia todos los días.</p>
     </div>
 
-    <p class="hero-note">
-      Escáner intraoral 3D y radiografía panorámica digital de baja dosis, incluidos en la
-      primera visita.
-    </p>
+    <div class="panel-see">
+      <ArchScan />
+    </div>
   </div>
-
-  <aside class="hero-aside">
-    <ToothScan />
-    <ClinicFacts />
-  </aside>
 </section>
 
 <style>
-  .hero {
+  .panel {
+    background: var(--panel);
+    color: var(--panel-ink);
+  }
+
+  .panel-grid {
     display: grid;
-    grid-template-columns: 1.25fr 0.75fr;
-    align-items: start;
-    gap: 64px;
-    padding-block: 76px 68px;
+    grid-template-columns: 1fr 1.05fr;
+    align-items: center;
+    gap: 68px;
+    padding-block: 84px 78px;
   }
 
   h1 {
-    margin-block: 20px 0;
-    font-size: clamp(2.3rem, 5.2vw, 3.6rem);
-    line-height: 1.06;
+    max-width: 17ch;
+    font-size: clamp(2.25rem, 4.8vw, 3.3rem);
   }
 
   .lead {
-    max-width: 34ch;
-    margin-block: 22px 0;
-    color: var(--ink-soft);
-    font-size: 19px;
-    line-height: 1.6;
+    max-width: 44ch;
+    margin-block: 26px 0;
+    color: var(--panel-ink-soft);
+    font-size: 18px;
+    line-height: 1.68;
   }
 
-  .hero-actions {
+  .panel-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 26px;
-    margin-top: 34px;
+    gap: 14px 28px;
+    margin-top: 36px;
   }
 
-  .hero-note {
-    max-width: 40ch;
-    margin-top: 26px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-    color: var(--ink-soft);
-    font-family: var(--font-display);
-    font-size: 13px;
+  /* El botón y el enlace se repintan para la pantalla oscura. */
+  .btn {
+    border-color: var(--panel-accent);
+    background: var(--panel-accent);
+    color: #2a0c16;
   }
 
-  .hero-aside {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+  .btn:hover {
+    border-color: #f9a3b9;
+    background: #f9a3b9;
   }
 
-  @media (max-width: 860px) {
-    .hero {
+  .btn-line {
+    border-color: var(--panel-line);
+    color: var(--panel-ink);
+  }
+
+  .btn-line:hover {
+    border-color: var(--panel-accent);
+    color: var(--panel-accent);
+  }
+
+  .panel-note {
+    margin-block: 30px 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--panel-line);
+    color: var(--panel-ink-soft);
+    font-family: var(--font-ui);
+    font-size: 14px;
+  }
+
+  .panel-see {
+    padding: 26px 18px 22px;
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius-lg);
+    background: var(--panel-soft);
+  }
+
+  @media (max-width: 900px) {
+    .panel-grid {
       grid-template-columns: 1fr;
-      gap: 44px;
-      padding-block: 52px 48px;
+      gap: 46px;
+      padding-block: 56px 52px;
+    }
+
+    h1 {
+      max-width: 20ch;
     }
   }
 </style>

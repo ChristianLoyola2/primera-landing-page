@@ -2,18 +2,17 @@
 import BookingForm from '~/components/BookingForm.astro';
 import { clinic } from '~/data/clinic';
 
-const contactLines = [
+const contact = [
   { value: clinic.phone.display, detail: clinic.hours.weekdays, href: clinic.phone.href },
   { value: clinic.email, detail: 'Respondemos el mismo día', href: `mailto:${clinic.email}` },
-  { value: clinic.address.street, detail: `${clinic.address.district} · ${clinic.address.transit}` },
+  { value: clinic.address.street, detail: clinic.address.transit },
 ];
 ---
 
-<section class="band" id="agendar">
-  <div class="wrap agendar-grid">
+<section class="section agendar" id="agendar">
+  <div class="shell agendar-grid">
     <div class="agendar-side">
-      <p class="eyebrow">Agendar</p>
-      <h2>Pide tu hora y te confirmamos por teléfono.</h2>
+      <h2>Pide tu hora y te llamamos para confirmarla.</h2>
       <p>
         Déjanos tu preferencia de día y franja. Te llamamos dentro de las {
           clinic.responseWindow
@@ -22,10 +21,10 @@ const contactLines = [
 
       <div class="side-data">
         {
-          contactLines.map((line) => (
+          contact.map((line) => (
             <div>
               <b>{line.href ? <a href={line.href}>{line.value}</a> : line.value}</b>
-              {line.detail}
+              <span>{line.detail}</span>
             </div>
           ))
         }
@@ -37,42 +36,47 @@ const contactLines = [
 </section>
 
 <style>
+  .agendar {
+    background: var(--surface-sunk);
+  }
+
   .agendar-grid {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
+    grid-template-columns: 0.82fr 1.18fr;
     align-items: start;
     gap: 56px;
-    padding-block: 72px;
   }
 
   .agendar-side h2 {
-    margin-top: 14px;
-    font-size: clamp(1.6rem, 3.4vw, 2.15rem);
-    line-height: 1.12;
+    font-size: clamp(1.65rem, 3.4vw, 2.15rem);
   }
 
-  .agendar-side p {
-    margin-block: 12px 0;
+  .agendar-side > p {
+    max-width: 40ch;
+    margin-block: 16px 0;
     color: var(--ink-soft);
-    font-size: 16px;
+    font-size: 16.5px;
   }
 
   .side-data {
     display: grid;
-    gap: 12px;
-    margin-top: 28px;
-    padding-top: 22px;
-    border-top: 1px solid var(--line);
-    color: var(--ink-soft);
-    font-family: var(--font-display);
+    gap: 14px;
+    margin-top: 32px;
+    padding-top: 26px;
+    border-top: 1px solid var(--line-strong);
+    font-family: var(--font-ui);
     font-size: 14px;
+    line-height: 1.55;
   }
 
   .side-data b {
     display: block;
-    color: var(--ink);
     font-weight: 500;
     font-variant-numeric: tabular-nums;
+  }
+
+  .side-data span {
+    color: var(--ink-soft);
   }
 
   .side-data a {
@@ -80,14 +84,13 @@ const contactLines = [
   }
 
   .side-data a:hover {
-    color: var(--brass);
+    color: var(--accent);
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .agendar-grid {
       grid-template-columns: 1fr;
       gap: 40px;
-      padding-block: 52px;
     }
   }
 </style>

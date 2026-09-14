@@ -3,21 +3,23 @@ import { clinic } from '~/data/clinic';
 ---
 
 <header class="topbar">
-  <div class="wrap topbar-inner">
+  <div class="shell topbar-inner">
     <a class="mark" href="#inicio">
-      {clinic.name}
-      <span>{clinic.tagline}</span>
+      <b>{clinic.name}</b>
+      <span>{clinic.address.district}, {clinic.address.city}</span>
     </a>
     <div class="topbar-right">
       <a class="tel" href={clinic.phone.href}>{clinic.phone.display}</a>
-      <a class="btn" href="#agendar">Agendar hora</a>
+      <a class="btn" href="#agendar">Pedir hora</a>
     </div>
   </div>
 </header>
 
 <style>
   .topbar {
-    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 10;
     background: var(--ground);
   }
 
@@ -26,42 +28,51 @@ import { clinic } from '~/data/clinic';
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 16px;
-    padding-block: 18px;
+    gap: 14px 20px;
+    padding-block: 16px;
   }
 
   .mark {
     display: flex;
     align-items: baseline;
-    gap: 9px;
-    font-family: var(--font-display);
+    gap: 10px;
+    font-family: var(--font-ui);
+    text-decoration: none;
+  }
+
+  .mark b {
     font-size: 17px;
     font-weight: 600;
-    letter-spacing: -0.015em;
-    text-decoration: none;
+    letter-spacing: -0.018em;
   }
 
   .mark span {
     color: var(--ink-soft);
-    font-weight: 400;
+    font-size: 14px;
   }
 
   .topbar-right {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 22px;
   }
 
   .tel {
     color: var(--ink-soft);
-    font-family: var(--font-display);
-    font-size: 14px;
+    font-family: var(--font-ui);
+    font-size: 14.5px;
     font-variant-numeric: tabular-nums;
     text-decoration: none;
   }
 
   .tel:hover {
     color: var(--ink);
+  }
+
+  @media (max-width: 480px) {
+    .mark span,
+    .tel {
+      display: none;
+    }
   }
 </style>
