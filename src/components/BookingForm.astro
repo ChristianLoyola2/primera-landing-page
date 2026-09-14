@@ -1,0 +1,366 @@
+---
+import { clinic } from '~/data/clinic';
+import { bookingReasons } from '~/data/treatments';
+import { timeSlots } from '~/data/time-slots';
+---
+
+<div class="panel">
+  <form id="form-hora" data-timezone={clinic.timezone} novalidate>
+    <div class="campos">
+      <div class="campo campo-ancho">
+        <label for="nombre">Nombre y apellido</label>
+        <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          autocomplete="name"
+          required
+          placeholder="María Contreras"
+        />
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input
+          id="telefono"
+          name="telefono"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          required
+          placeholder="+56 9 1234 5678"
+        />
+      </div>
+
+      <div class="campo">
+        <label for="email">Email <span class="opt">(opcional)</span></label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="maria@correo.cl"
+        />
+      </div>
+
+      <div class="campo campo-ancho">
+        <label for="motivo">Motivo de la consulta</label>
+        <select id="motivo" name="motivo">
+          {bookingReasons.map((reason) => <option value={reason.id}>{reason.name}</option>)}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="fecha">Día preferido</label>
+        <input id="fecha" name="fecha" type="date" required />
+      </div>
+
+      <div class="campo">
+        <span class="grupo-label" id="lbl-franja">Franja</span>
+        <div class="franjas" role="radiogroup" aria-labelledby="lbl-franja">
+          {
+            timeSlots.map((slot, index) => (
+              <label class="franja">
+                <input
+                  type="radio"
+                  id={`franja-${slot.id}`}
+                  name="franja"
+                  value={slot.id}
+                  checked={index === 0}
+                />
+                <span>{slot.short}</span>
+              </label>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="campo campo-ancho">
+        <label for="notas">Algo que debamos saber <span class="opt">(opcional)</span></label>
+        <textarea
+          id="notas"
+          name="notas"
+          maxlength="600"
+          placeholder="Dolor al masticar en el lado derecho desde el lunes."></textarea>
+      </div>
+    </div>
+
+    <div class="trampa" aria-hidden="true">
+      <label for="botcheck">No llenar este campo</label>
+      <input id="botcheck" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="enviar">
+      <small>Usamos tus datos solo para contactarte por esta hora.</small>
+      <button class="btn" id="enviar" type="submit">Solicitar hora</button>
+    </div>
+
+    <p class="aviso" id="aviso" role="alert" hidden></p>
+  </form>
+
+  <div class="ok" id="confirmacion" hidden>
+    <p class="eyebrow">Solicitud recibida</p>
+    <h3>Gracias, te llamamos en breve.</h3>
+    <p>
+      Te contactamos al teléfono que dejaste dentro de las {clinic.responseWindow} siguientes
+      para confirmar la hora exacta. Todavía no es una hora reservada.
+    </p>
+    <dl class="ok-resumen">
+      <div><dt>Motivo</dt><dd id="ok-motivo"></dd></div>
+      <div><dt>Preferencia</dt><dd id="ok-fecha"></dd></div>
+      <div><dt>Teléfono</dt><dd id="ok-tel"></dd></div>
+      <div><dt>Código</dt><dd class="codigo" id="ok-codigo"></dd></div>
+    </dl>
+  </div>
+</div>
+
+<script>
+  import { initBookingForm } from '~/scripts/booking-form';
+
+  initBookingForm();
+</script>
+
+<style>
+  .panel {
+    padding: 32px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .campo-ancho {
+    grid-column: 1 / -1;
+  }
+
+  label,
+  .grupo-label {
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .opt {
+    color: var(--line-strong);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 15.5px;
+    transition: border-color 0.15s ease;
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--ink-soft);
+  }
+
+  textarea {
+    min-height: 86px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  select {
+    padding-right: 36px;
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, currentColor 50%),
+      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 50%,
+      calc(100% - 13px) 50%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+  }
+
+  /* Campo trampa: fuera de la pantalla, invisible para quien navega. */
+  .trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .franjas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .franja {
+    position: relative;
+    flex: 1 1 160px;
+  }
+
+  .franja input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .franja span {
+    display: block;
+    padding: 11px 10px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    font-size: 14.5px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .franja input:checked + span {
+    border-color: var(--brass);
+    background: var(--brass-veil);
+    color: var(--ink);
+  }
+
+  .franja input:focus-visible + span {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+  }
+
+  .enviar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 26px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+  .enviar small {
+    max-width: 34ch;
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .aviso {
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-left: 2px solid var(--brass);
+    background: var(--brass-veil);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .ok {
+    display: grid;
+    gap: 14px;
+    animation: fade 0.4s ease both;
+  }
+
+  .ok h3 {
+    font-size: 1.45rem;
+  }
+
+  .ok p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .ok-resumen {
+    display: grid;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: 14.5px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ok-resumen div {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .ok-resumen dt {
+    color: var(--ink-soft);
+  }
+
+  .ok-resumen dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  .codigo {
+    color: var(--brass);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .panel {
+      padding: 22px 20px;
+    }
+
+    .campos {
+      grid-template-columns: 1fr;
+    }
+
+    .enviar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .enviar .btn {
+      text-align: center;
+    }
+  }
+</style>

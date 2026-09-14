@@ -1,0 +1,56 @@
+---
+/**
+ * Un molar dibujado como lo muestra un escáner intraoral: el contorno y las
+ * líneas de barrido recortadas contra él. Es el único adorno de la página y
+ * sale del mundo del propio sujeto, no de un banco de iconos.
+ */
+interface Props {
+  width?: number;
+}
+
+const { width = 116 } = Astro.props;
+
+const MOLAR_PATH =
+  'M60 10 C34 10 18 29 18 55 C18 76 24 92 26 112 C28 134 30 152 38 152 C46 152 48 129 54 110 C56 102 64 102 66 110 C72 129 74 152 82 152 C90 152 92 134 94 112 C96 92 102 76 102 55 C102 29 86 10 60 10 Z';
+
+/** Líneas de barrido cada 8 unidades a lo alto del diente. */
+const SCAN_LINES = Array.from({ length: 18 }, (_, index) => 16 + index * 8);
+
+// Cada instancia necesita su propio clipPath para no pisarse con otra.
+const clipId = `molar-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<svg
+  class="scan"
+  style={`width:${width}px`}
+  viewBox="0 0 120 164"
+  role="img"
+  aria-label="Diente escaneado en 3D, ilustración de líneas"
+>
+  <defs>
+    <clipPath id={clipId}>
+      <path d={MOLAR_PATH} />
+    </clipPath>
+  </defs>
+
+  <g clip-path={`url(#${clipId})`}>
+    <g stroke="var(--brass)" stroke-width="1" opacity=".5">
+      {SCAN_LINES.map((y) => <line x1="10" y1={y} x2="110" y2={y} />)}
+    </g>
+  </g>
+
+  <path d={MOLAR_PATH} fill="none" stroke="var(--ink)" stroke-width="1.4" />
+  <path
+    d="M32 47 C42 40 50 40 60 45 C70 40 78 40 88 47"
+    fill="none"
+    stroke="var(--ink-soft)"
+    stroke-width="1.2"
+  />
+</svg>
+
+<style>
+  .scan {
+    display: block;
+    height: auto;
+  }
+</style>

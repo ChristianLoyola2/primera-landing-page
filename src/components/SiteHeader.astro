@@ -1,0 +1,67 @@
+---
+import { clinic } from '~/data/clinic';
+---
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="mark" href="#inicio">
+      {clinic.name}
+      <span>{clinic.tagline}</span>
+    </a>
+    <div class="topbar-right">
+      <a class="tel" href={clinic.phone.href}>{clinic.phone.display}</a>
+      <a class="btn" href="#agendar">Agendar hora</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    background: var(--ground);
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-block: 18px;
+  }
+
+  .mark {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+  }
+
+  .mark span {
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 22px;
+  }
+
+  .tel {
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+
+  .tel:hover {
+    color: var(--ink);
+  }
+</style>

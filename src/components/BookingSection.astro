@@ -1,0 +1,93 @@
+---
+import BookingForm from '~/components/BookingForm.astro';
+import { clinic } from '~/data/clinic';
+
+const contactLines = [
+  { value: clinic.phone.display, detail: clinic.hours.weekdays, href: clinic.phone.href },
+  { value: clinic.email, detail: 'Respondemos el mismo día', href: `mailto:${clinic.email}` },
+  { value: clinic.address.street, detail: `${clinic.address.district} · ${clinic.address.transit}` },
+];
+---
+
+<section class="band" id="agendar">
+  <div class="wrap agendar-grid">
+    <div class="agendar-side">
+      <p class="eyebrow">Agendar</p>
+      <h2>Pide tu hora y te confirmamos por teléfono.</h2>
+      <p>
+        Déjanos tu preferencia de día y franja. Te llamamos dentro de las {
+          clinic.responseWindow
+        } siguientes para cerrar la hora exacta.
+      </p>
+
+      <div class="side-data">
+        {
+          contactLines.map((line) => (
+            <div>
+              <b>{line.href ? <a href={line.href}>{line.value}</a> : line.value}</b>
+              {line.detail}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <BookingForm />
+  </div>
+</section>
+
+<style>
+  .agendar-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    align-items: start;
+    gap: 56px;
+    padding-block: 72px;
+  }
+
+  .agendar-side h2 {
+    margin-top: 14px;
+    font-size: clamp(1.6rem, 3.4vw, 2.15rem);
+    line-height: 1.12;
+  }
+
+  .agendar-side p {
+    margin-block: 12px 0;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  .side-data {
+    display: grid;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    font-size: 14px;
+  }
+
+  .side-data b {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .side-data a {
+    text-decoration: none;
+  }
+
+  .side-data a:hover {
+    color: var(--brass);
+  }
+
+  @media (max-width: 860px) {
+    .agendar-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-block: 52px;
+    }
+  }
+</style>

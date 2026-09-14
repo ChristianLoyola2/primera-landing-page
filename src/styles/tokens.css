@@ -1,0 +1,73 @@
+/**
+ * Sistema de diseño de Sonrisa Digital.
+ *
+ * Paleta: porcelana fría de fondo, tinta petróleo y un único acento de
+ * latón reservado para la acción de agendar. Los tres bloques cubren los
+ * tres estados del tema: claro por defecto, oscuro del sistema, y elección
+ * explícita vía [data-theme].
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Superficies */
+  --ground: #f3f5f3;
+  --surface: #ffffff;
+  --surface-sunk: #eaeeeb;
+
+  /* Tinta */
+  --ink: #14302c;
+  --ink-soft: #5c7873;
+
+  /* Trazos */
+  --line: #dce2de;
+  --line-strong: #c3cec8;
+
+  /* Acento */
+  --brass: #8f6024;
+  --brass-strong: #6f4917;
+  --brass-veil: #efe6d9;
+  --on-brass: #ffffff;
+
+  --shadow: 0 1px 2px rgb(20 48 44 / 5%), 0 12px 32px -20px rgb(20 48 44 / 30%);
+
+  /* Tipografía */
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  /* Medidas */
+  --measure: 68rem;
+  --gutter: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ground: #0d1513;
+    --surface: #14201d;
+    --surface-sunk: #101917;
+    --ink: #e6ede9;
+    --ink-soft: #94a9a3;
+    --line: #253431;
+    --line-strong: #33443f;
+    --brass: #d8a05a;
+    --brass-strong: #ebb971;
+    --brass-veil: #241d12;
+    --on-brass: #10201c;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -20px rgb(0 0 0 / 80%);
+  }
+}
+
+:root[data-theme='dark'] {
+  --ground: #0d1513;
+  --surface: #14201d;
+  --surface-sunk: #101917;
+  --ink: #e6ede9;
+  --ink-soft: #94a9a3;
+  --line: #253431;
+  --line-strong: #33443f;
+  --brass: #d8a05a;
+  --brass-strong: #ebb971;
+  --brass-veil: #241d12;
+  --on-brass: #10201c;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -20px rgb(0 0 0 / 80%);
+}

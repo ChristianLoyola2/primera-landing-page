@@ -1,0 +1,71 @@
+---
+import { treatments } from '~/data/treatments';
+---
+
+<section class="band" id="tratamientos">
+  <div class="wrap band-inner">
+    <div class="band-head">
+      <p class="eyebrow">Tratamientos</p>
+      <h2>Lo que hacemos, con el tiempo que toma.</h2>
+      <p>
+        Cada hora se reserva completa para una sola persona. Si el tratamiento necesita más
+        tiempo, te lo decimos antes de empezar.
+      </p>
+    </div>
+
+    <ul class="tratamientos">
+      {
+        treatments.map((treatment) => (
+          <li class="trat">
+            <h3 class="trat-name">{treatment.name}</h3>
+            <span class="trat-dur">{treatment.duration}</span>
+            <p class="trat-note">{treatment.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .tratamientos {
+    margin: 40px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .trat {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 8px 28px;
+    padding-block: 17px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .trat-name {
+    font-family: var(--font-display);
+    font-size: 16.5px;
+    font-weight: 500;
+    letter-spacing: normal;
+  }
+
+  .trat-dur {
+    grid-row: 1;
+    grid-column: 2;
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .trat-note {
+    grid-column: 1;
+    max-width: 52ch;
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+</style>

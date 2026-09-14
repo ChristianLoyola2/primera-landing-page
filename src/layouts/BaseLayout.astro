@@ -1,0 +1,72 @@
+---
+import '~/styles/tokens.css';
+import '~/styles/global.css';
+import { clinic } from '~/data/clinic';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+/**
+ * Datos estructurados para buscadores y mapas. Salen del mismo objeto que
+ * pinta la página, así que no pueden quedar desincronizados con lo que ve
+ * el paciente.
+ */
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Dentist',
+  name: clinic.name,
+  url: canonical,
+  telephone: clinic.phone.display,
+  email: clinic.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: clinic.address.street,
+    addressLocality: clinic.address.district,
+    addressRegion: clinic.address.region,
+    addressCountry: clinic.address.country,
+  },
+  openingHours: clinic.hours.schema,
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f3f5f3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1513" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_CL" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap"
+    />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import BookingSection from '~/components/BookingSection.astro';
+import Hero from '~/components/Hero.astro';
+import SiteFooter from '~/components/SiteFooter.astro';
+import SiteHeader from '~/components/SiteHeader.astro';
+import TreatmentList from '~/components/TreatmentList.astro';
+import VisitSteps from '~/components/VisitSteps.astro';
+import { clinic } from '~/data/clinic';
+
+const title = `${clinic.name} · ${clinic.tagline}`;
+const description = `Clínica dental en ${clinic.address.district}. Primera visita de ${clinic.firstVisit.duration} con escáner intraoral 3D, radiografía digital y plan de tratamiento el mismo día. Agenda tu hora online.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main>
+    <Hero />
+    <TreatmentList />
+    <VisitSteps />
+    <BookingSection />
+  </main>
+  <SiteFooter />
+</BaseLayout>
