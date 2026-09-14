@@ -1,0 +1,239 @@
+---
+/**
+ * La arcada superior como la muestra el escáner intraoral: vista oclusal,
+ * catorce piezas con su numeración FDI (17 a 27, sin terceros molares).
+ *
+ * La geometría se genera aquí, no se pega: cada pieza tiene su ancho y su
+ * profundidad reales en proporción, se acumulan a lo largo del arco desde
+ * la línea media y se rota para que mire hacia afuera. Es un dibujo a
+ * escala, no un icono.
+ */
+
+/** Una pieza por cuadrante, de la línea media hacia atrás. */
+const QUADRANT = [
+  { n: 1, w: 30, d: 20, r: 5, groove: false },
+  { n: 2, w: 24, d: 18, r: 5, groove: false },
+  { n: 3, w: 26, d: 25, r: 9, groove: false },
+  { n: 4, w: 27, d: 27, r: 7, groove: true },
+  { n: 5, w: 27, d: 27, r: 7, groove: true },
+  { n: 6, w: 38, d: 33, r: 7, groove: true },
+  { n: 7, w: 35, d: 31, r: 7, groove: true },
+];
+
+const GAP = 2.5;
+const CX = 280;
+const CY = 258;
+const R = 200;
+/** Recorrido que ocupa media arcada; fija a qué ángulo llega el último molar. */
+const HALF_ARC = 222;
+const MAX_ANGLE = 80;
+
+/** Centro de cada pieza medido a lo largo del arco desde la línea media. */
+const positions = QUADRANT.reduce<number[]>((acc, tooth, index) => {
+  const previous = index === 0 ? 0 : acc[index - 1] + QUADRANT[index - 1].w / 2 + GAP;
+  acc.push(previous + tooth.w / 2);
+  return acc;
+}, []);
+
+interface Tooth {
+  fdi: number;
+  angle: number;
+  x: number;
+  y: number;
+  labelX: number;
+  labelY: number;
+  w: number;
+  d: number;
+  r: number;
+  groove: boolean;
+}
+
+/** side -1 es el cuadrante derecho del paciente, que se dibuja a la izquierda. */
+function place(side: -1 | 1, index: number): Tooth {
+  const tooth = QUADRANT[index];
+  const angle = (side * positions[index] * MAX_ANGLE) / HALF_ARC;
+  const rad = (angle * Math.PI) / 180;
+  const label = 1.235;
+
+  return {
+    fdi: (side === -1 ? 10 : 20) + tooth.n,
+    angle,
+    x: CX + R * Math.sin(rad),
+    y: CY - R * Math.cos(rad),
+    labelX: CX + R * label * Math.sin(rad),
+    labelY: CY - R * label * Math.cos(rad),
+    w: tooth.w,
+    d: tooth.d,
+    r: tooth.r,
+    groove: tooth.groove,
+  };
+}
+
+/** De izquierda a derecha en la imagen: 17…11, 21…27, como en la ficha. */
+const teeth: Tooth[] = [
+  ...QUADRANT.map((_, i) => place(-1, i)).reverse(),
+  ...QUADRANT.map((_, i) => place(1, i)),
+];
+
+/** Banda de encía, justo por fuera de las coronas. */
+const GUM_RADIUS = R * 1.115;
+const gumPoints = Array.from({ length: 49 }, (_, i) => {
+  const angle = -82 + (i * 164) / 48;
+  const rad = (angle * Math.PI) / 180;
+  const x = CX + GUM_RADIUS * Math.sin(rad);
+  const y = CY - GUM_RADIUS * Math.cos(rad);
+  return `${x.toFixed(1)},${y.toFixed(1)}`;
+}).join(' ');
+
+// Cada instancia necesita su propio degradado para no pisarse con otra.
+const uid = crypto.randomUUID().slice(0, 8);
+const sweepId = `sweep-${uid}`;
+const frameId = `frame-${uid}`;
+---
+
+<figure class="scan">
+  <svg viewBox="0 0 560 252" role="img" aria-labelledby="arch-title">
+    <title id="arch-title">
+      Arcada superior escaneada en 3D, con la numeración FDI de cada pieza
+    </title>
+
+    <defs>
+      <linearGradient id={sweepId} x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="var(--panel-accent)" stop-opacity="0" />
+        <stop offset="0.5" stop-color="var(--panel-accent)" stop-opacity="0.5" />
+        <stop offset="1" stop-color="var(--panel-accent)" stop-opacity="0" />
+      </linearGradient>
+
+      <clipPath id={frameId}>
+        <rect x="0" y="0" width="560" height="252" />
+      </clipPath>
+    </defs>
+
+    <polyline
+      class="gum"
+      points={gumPoints}
+      fill="none"
+      stroke="var(--panel-accent)"
+      stroke-width="18"
+      stroke-linecap="round"
+      stroke-opacity="0.26"
+    />
+
+    {
+      teeth.map((tooth, index) => (
+        <g class="tooth" style={`--i:${index}`}>
+          <g transform={`translate(${tooth.x.toFixed(1)} ${tooth.y.toFixed(1)}) rotate(${tooth.angle.toFixed(1)})`}>
+            <rect
+              x={-tooth.w / 2}
+              y={-tooth.d / 2}
+              width={tooth.w}
+              height={tooth.d}
+              rx={tooth.r}
+              fill="var(--enamel)"
+              stroke="var(--enamel-edge)"
+              stroke-width="1"
+            />
+            {tooth.groove && (
+              <line
+                x1={-tooth.w / 2 + 6}
+                y1="0"
+                x2={tooth.w / 2 - 6}
+                y2="0"
+                stroke="var(--enamel-edge)"
+                stroke-width="1.1"
+                stroke-linecap="round"
+                opacity="0.75"
+              />
+            )}
+          </g>
+          <text
+            class="fdi"
+            x={tooth.labelX.toFixed(1)}
+            y={tooth.labelY.toFixed(1)}
+            fill="var(--panel-ink-soft)"
+            text-anchor="middle"
+            dominant-baseline="central"
+          >
+            {tooth.fdi}
+          </text>
+        </g>
+      ))
+    }
+
+    <g clip-path={`url(#${frameId})`}>
+      <rect class="sweep" x="-150" y="0" width="150" height="252" fill={`url(#${sweepId})`} />
+    </g>
+  </svg>
+
+  <figcaption>Arcada superior, numeración FDI. Así se ve en la pantalla de la consulta.</figcaption>
+</figure>
+
+<style>
+  .scan {
+    margin: 0;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .fdi {
+    font-family: var(--font-ui);
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  figcaption {
+    margin-top: 20px;
+    color: var(--panel-ink-soft);
+    font-family: var(--font-ui);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  /*
+   * El único momento de movimiento de la página: el barrido cruza una vez
+   * al cargar y las piezas van apareciendo a su paso. Después se detiene.
+   */
+  .tooth {
+    animation: erupt 0.5s ease-out both;
+    animation-delay: calc(0.3s + var(--i) * 0.075s);
+  }
+
+  .sweep {
+    animation: barrido 1.6s cubic-bezier(0.3, 0, 0.2, 1) 0.15s both;
+  }
+
+  @keyframes erupt {
+    from {
+      opacity: 0.18;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes barrido {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    78% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(710px);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sweep {
+      display: none;
+    }
+  }
+</style>

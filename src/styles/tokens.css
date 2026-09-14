@@ -1,73 +1,102 @@
 /**
  * Sistema de diseño de Sonrisa Digital.
  *
- * Paleta: porcelana fría de fondo, tinta petróleo y un único acento de
- * latón reservado para la acción de agendar. Los tres bloques cubren los
- * tres estados del tema: claro por defecto, oscuro del sistema, y elección
- * explícita vía [data-theme].
+ * La paleta sale de los materiales del sujeto: el grafito azulado del
+ * monitor de la consulta, la porcelana fría de la sala, el marfil tibio
+ * del esmalte y el rojo-violeta de la encía sana, que es el único acento
+ * y el mismo pigmento que aparece en el render de la arcada.
+ *
+ * Tres bloques cubren los tres estados del tema: claro por defecto,
+ * oscuro del sistema, y elección explícita vía [data-theme].
  */
 
 :root {
   color-scheme: light dark;
 
-  /* Superficies */
-  --ground: #f3f5f3;
+  /* Superficies de la página */
+  --ground: #eff2f1;
   --surface: #ffffff;
-  --surface-sunk: #eaeeeb;
+  --surface-sunk: #e6eae9;
 
-  /* Tinta */
-  --ink: #14302c;
-  --ink-soft: #5c7873;
+  /* Tinta: lleva dentro el azul del panel, no es un negro teñido al azar */
+  --ink: #16212b;
+  --ink-soft: #5a6a74;
 
   /* Trazos */
-  --line: #dce2de;
-  --line-strong: #c3cec8;
+  --line: #d7dedc;
+  --line-strong: #bac5c2;
 
-  /* Acento */
-  --brass: #8f6024;
-  --brass-strong: #6f4917;
-  --brass-veil: #efe6d9;
-  --on-brass: #ffffff;
+  /* Acento: encía sana */
+  --accent: #a82a54;
+  --accent-strong: #8c1f44;
+  --accent-veil: #f7e7ec;
+  --on-accent: #ffffff;
 
-  --shadow: 0 1px 2px rgb(20 48 44 / 5%), 0 12px 32px -20px rgb(20 48 44 / 30%);
+  --shadow: 0 1px 2px rgb(22 33 43 / 6%), 0 18px 40px -28px rgb(22 33 43 / 45%);
+
+  /*
+   * El panel del instrumento. Casi no cambia entre temas porque una
+   * pantalla encendida es oscura siempre; lo que cambia es si queda más
+   * clara o más oscura que el papel que la rodea.
+   */
+  --panel: #111a24;
+  --panel-soft: #1a2530;
+  --panel-ink: #e9eef1;
+  --panel-ink-soft: #94a7b4;
+  --panel-line: #26333f;
+  --panel-accent: #f2809f;
+
+  /* Pigmentos del render: solo se usan dentro del dibujo de la arcada */
+  --enamel: #eee6d9;
+  --enamel-edge: #b9ab95;
 
   /* Tipografía */
-  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  --font-body: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-text: 'Literata', Georgia, 'Times New Roman', serif;
 
   /* Medidas */
-  --measure: 68rem;
-  --gutter: 24px;
+  --measure: 70rem;
+  --gutter: 26px;
+  --radius: 4px;
+  --radius-lg: 10px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --ground: #0d1513;
-    --surface: #14201d;
-    --surface-sunk: #101917;
-    --ink: #e6ede9;
-    --ink-soft: #94a9a3;
-    --line: #253431;
-    --line-strong: #33443f;
-    --brass: #d8a05a;
-    --brass-strong: #ebb971;
-    --brass-veil: #241d12;
-    --on-brass: #10201c;
-    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -20px rgb(0 0 0 / 80%);
+    --ground: #0e1319;
+    --surface: #161e26;
+    --surface-sunk: #121920;
+    --ink: #e7edf0;
+    --ink-soft: #94a5af;
+    --line: #253039;
+    --line-strong: #35434e;
+    --accent: #f0899f;
+    --accent-strong: #f7a5b7;
+    --accent-veil: #2a151d;
+    --on-accent: #2a0c16;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 18px 40px -28px rgb(0 0 0 / 85%);
+
+    /* La pantalla ahora brilla por encima del papel, no por debajo */
+    --panel: #18222d;
+    --panel-soft: #212d39;
+    --panel-line: #2f3d4a;
   }
 }
 
 :root[data-theme='dark'] {
-  --ground: #0d1513;
-  --surface: #14201d;
-  --surface-sunk: #101917;
-  --ink: #e6ede9;
-  --ink-soft: #94a9a3;
-  --line: #253431;
-  --line-strong: #33443f;
-  --brass: #d8a05a;
-  --brass-strong: #ebb971;
-  --brass-veil: #241d12;
-  --on-brass: #10201c;
-  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -20px rgb(0 0 0 / 80%);
+  --ground: #0e1319;
+  --surface: #161e26;
+  --surface-sunk: #121920;
+  --ink: #e7edf0;
+  --ink-soft: #94a5af;
+  --line: #253039;
+  --line-strong: #35434e;
+  --accent: #f0899f;
+  --accent-strong: #f7a5b7;
+  --accent-veil: #2a151d;
+  --on-accent: #2a0c16;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 18px 40px -28px rgb(0 0 0 / 85%);
+  --panel: #18222d;
+  --panel-soft: #212d39;
+  --panel-line: #2f3d4a;
 }

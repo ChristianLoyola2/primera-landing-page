@@ -39,7 +39,7 @@ src/
 │  ├─ clinic.ts        Teléfono, dirección, horarios, zona horaria
 │  ├─ treatments.ts    Catálogo con duraciones; alimenta la lista y el <select>
 │  ├─ time-slots.ts    Franjas horarias que se pueden pedir
-│  └─ visit-steps.ts   Los tres pasos de la primera visita
+│  └─ visit-steps.ts   Los tramos de la primera visita, con sus minutos
 ├─ lib/             Lógica pura, sin DOM y sin dependencias
 │  ├─ booking.ts       Validación compartida por cliente y servidor
 │  └─ format.ts        Código de reserva y fechas en español
@@ -70,6 +70,13 @@ si el `min` saliera del build, al día siguiente ya estaría desactualizado.
 
 **"Hoy" es el de la clínica.** Las fechas se comparan contra
 `clinic.timezone`, no contra el reloj del visitante ni el del servidor.
+
+**Los dibujos se generan, no se pegan.** La arcada del encabezado
+(`ArchScan.astro`) coloca catorce piezas sobre una elipse a partir del ancho
+y la profundidad de cada una, y las rotula con la numeración FDI. Los tramos
+de la primera visita se dibujan al ancho de sus minutos reales: por eso no
+van numerados, el tamaño ya dice cuánto pesa cada uno. Si cambian los minutos
+en `visit-steps.ts`, cambia el dibujo.
 
 **El formulario pide, no reserva.** La confirmación lo dice explícitamente:
 la clínica llama para cerrar la hora. El código `SD-XXXXX` es una referencia

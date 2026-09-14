@@ -1,0 +1,132 @@
+---
+import { visitMinutes, visitSteps } from '~/data/visit-steps';
+
+/**
+ * Los tres tramos de la primera visita, dibujados a escala: el ancho de
+ * cada bloque son sus minutos reales. Por eso no van numerados; el tamaño
+ * ya dice en qué orden y cuánto pesa cada uno.
+ */
+let elapsed = 0;
+const segments = visitSteps.map((step) => {
+  const from = elapsed;
+  elapsed += step.minutes;
+  return { ...step, from, to: elapsed, range: `${from}–${elapsed} min` };
+});
+
+/** El tramo más largo es el escaneo, y es el que lleva el acento lleno. */
+const longest = segments.reduce((a, b) => (b.minutes > a.minutes ? b : a));
+
+const columns = segments.map((segment) => `${segment.minutes}fr`).join(' ');
+---
+
+<section class="section" id="visita">
+  <div class="shell">
+    <div class="section-head">
+      <h2>Cómo se reparten los {visitMinutes} minutos.</h2>
+      <p>
+        Esto es lo que pasa en la primera visita, tramo por tramo. Los bloques están
+        dibujados al ancho de sus minutos.
+      </p>
+    </div>
+
+    <div class="linea" style={`--cols:${columns}`}>
+      <div class="barra" aria-hidden="true">
+        {
+          segments.map((segment) => (
+            <span class:list={['tramo', segment.title === longest.title && 'tramo-fuerte']} />
+          ))
+        }
+      </div>
+
+      <ol class="tramos">
+        {
+          segments.map((segment) => (
+            <li>
+              <span class="min">{segment.range}</span>
+              <h3>{segment.title}</h3>
+              <p>{segment.description}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .linea {
+    margin-top: 44px;
+  }
+
+  .barra {
+    display: grid;
+    grid-template-columns: var(--cols);
+    gap: 3px;
+    height: 7px;
+  }
+
+  .tramo {
+    display: block;
+    border-radius: 1px;
+    background: var(--accent);
+    opacity: 0.3;
+  }
+
+  .tramo-fuerte {
+    opacity: 1;
+  }
+
+  .tramos {
+    display: grid;
+    grid-template-columns: var(--cols);
+    gap: 3px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tramos li {
+    padding: 18px 26px 0 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .min {
+    display: block;
+    color: var(--accent);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tramos h3 {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  .tramos p {
+    margin-block: 10px 0;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  /*
+   * Bajo cierto ancho el dibujo a escala deja de leerse: el tramo de 12
+   * minutos quedaría en 90 píxeles. Se apila y los minutos los dice el
+   * rótulo, que es la misma información sin el dibujo.
+   */
+  @media (max-width: 780px) {
+    .barra {
+      display: none;
+    }
+
+    .tramos {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .tramos li {
+      padding: 20px 0 22px;
+    }
+  }
+</style>

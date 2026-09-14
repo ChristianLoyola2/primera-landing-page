@@ -2,24 +2,28 @@
 import { treatments } from '~/data/treatments';
 ---
 
-<section class="band" id="tratamientos">
-  <div class="wrap band-inner">
-    <div class="band-head">
-      <p class="eyebrow">Tratamientos</p>
-      <h2>Lo que hacemos, con el tiempo que toma.</h2>
+<section class="section" id="tratamientos">
+  <div class="shell">
+    <div class="section-head">
+      <h2>Tratamientos y el tiempo que reservamos.</h2>
       <p>
         Cada hora se reserva completa para una sola persona. Si el tratamiento necesita más
         tiempo, te lo decimos antes de empezar.
       </p>
     </div>
 
-    <ul class="tratamientos">
+    <ul class="lista">
       {
         treatments.map((treatment) => (
-          <li class="trat">
-            <h3 class="trat-name">{treatment.name}</h3>
-            <span class="trat-dur">{treatment.duration}</span>
-            <p class="trat-note">{treatment.description}</p>
+          <li>
+            <div class="celda-nombre">
+              <h3>{treatment.name}</h3>
+              <p>{treatment.description}</p>
+            </div>
+            <div class="celda-dur">
+              <b>{treatment.duration}</b>
+              {treatment.qualifier && <span>{treatment.qualifier}</span>}
+            </div>
           </li>
         ))
       }
@@ -28,44 +32,77 @@ import { treatments } from '~/data/treatments';
 </section>
 
 <style>
-  .tratamientos {
-    margin: 40px 0 0;
+  .lista {
+    margin: 44px 0 0;
     padding: 0;
-    border-top: 1px solid var(--line);
     list-style: none;
   }
 
-  .trat {
+  .lista li {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: baseline;
-    gap: 8px 28px;
-    padding-block: 17px;
+    gap: 10px 32px;
+    padding-block: 20px;
     border-bottom: 1px solid var(--line);
   }
 
-  .trat-name {
-    font-family: var(--font-display);
-    font-size: 16.5px;
+  .lista li:first-child {
+    border-top: 1px solid var(--line);
+  }
+
+  .celda-nombre h3 {
+    font-size: 17.5px;
     font-weight: 500;
-    letter-spacing: normal;
+    letter-spacing: -0.012em;
   }
 
-  .trat-dur {
-    grid-row: 1;
-    grid-column: 2;
+  .celda-nombre p {
+    max-width: 56ch;
+    margin: 8px 0 0;
     color: var(--ink-soft);
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
+    font-size: 16px;
+  }
+
+  .celda-dur {
+    text-align: right;
     white-space: nowrap;
+    font-family: var(--font-ui);
+    font-variant-numeric: tabular-nums;
   }
 
-  .trat-note {
-    grid-column: 1;
-    max-width: 52ch;
-    margin: 0;
+  .celda-dur b {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .celda-dur span {
+    display: block;
+    margin-top: 3px;
     color: var(--ink-soft);
-    font-size: 15.5px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 560px) {
+    .lista li {
+      grid-template-columns: 1fr;
+    }
+
+    .celda-dur {
+      grid-row: 1;
+      text-align: left;
+    }
+
+    .celda-dur b,
+    .celda-dur span {
+      display: inline;
+      color: var(--ink-soft);
+      font-size: 13.5px;
+    }
+
+    .celda-dur span::before {
+      content: ', ';
+    }
   }
 </style>

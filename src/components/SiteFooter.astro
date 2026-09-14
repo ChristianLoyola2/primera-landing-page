@@ -2,20 +2,34 @@
 import { clinic } from '~/data/clinic';
 
 const columns = [
-  { heading: clinic.name, detail: `${clinic.tagline} · ${clinic.address.district}` },
-  { heading: clinic.address.street, detail: clinic.address.transit },
-  { heading: clinic.hours.weekdays, detail: clinic.hours.saturday },
-  { heading: clinic.phone.display, detail: clinic.email },
+  {
+    heading: clinic.name,
+    lines: [`${clinic.tagline} en ${clinic.address.district}`],
+  },
+  {
+    heading: clinic.address.street,
+    lines: [`${clinic.address.district}, ${clinic.address.city}`, clinic.address.transit],
+  },
+  {
+    heading: clinic.hours.weekdays,
+    lines: [clinic.hours.saturday],
+  },
+  {
+    heading: clinic.phone.display,
+    lines: [clinic.email],
+  },
 ];
 ---
 
 <footer class="pie">
-  <div class="wrap pie-inner">
+  <div class="shell pie-inner">
     {
       columns.map((column) => (
         <div class="pie-col">
           <b>{column.heading}</b>
-          {column.detail}
+          {column.lines.map((line) => (
+            <span>{line}</span>
+          ))}
         </div>
       ))
     }
@@ -25,27 +39,28 @@ const columns = [
 <style>
   .pie {
     border-top: 1px solid var(--line);
+    background: var(--surface-sunk);
   }
 
   .pie-inner {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 32px 48px;
-    padding-block: 40px 48px;
+    align-items: flex-start;
+    gap: 30px 48px;
+    padding-block: 44px 52px;
     color: var(--ink-soft);
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 14px;
+    line-height: 1.6;
   }
 
   .pie-col {
     display: grid;
-    gap: 6px;
+    gap: 4px;
   }
 
   .pie-col b {
-    display: block;
     color: var(--ink);
     font-weight: 500;
     font-variant-numeric: tabular-nums;

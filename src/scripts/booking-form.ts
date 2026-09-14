@@ -39,7 +39,7 @@ export function initBookingForm(): void {
   function failed(technicalReason: unknown): void {
     console.error('Sonrisa Digital · formulario:', technicalReason);
     submitButton!.disabled = false;
-    submitButton!.textContent = 'Solicitar hora';
+    submitButton!.textContent = 'Pedir hora';
     showNotice(
       `No pudimos enviar la solicitud. Llámanos al ${clinic.phone.display} y te damos la hora al momento.`,
     );
@@ -115,7 +115,7 @@ export function initBookingForm(): void {
         // cualquier otro código es problema nuestro.
         if (response.status === 400 && !body.ok) {
           submitButton.disabled = false;
-          submitButton.textContent = 'Solicitar hora';
+          submitButton.textContent = 'Pedir hora';
           showNotice(body.message);
           if (body.field) el<HTMLElement>(body.field)?.focus();
           return;
